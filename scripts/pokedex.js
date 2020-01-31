@@ -11,37 +11,33 @@ document.addEventListener("DOMContentLoaded", function() {
     .then(resp => resp.json())
     .then(data => {
       getAllTypes(data)
-      countPokemonByType(data)
-
-      const sortedTyped = sortObject(types)
 
       const chart = document.createElement('ul');
       chart.classList.add('chart');
       document.body.append(chart);
 
       total = data.length;
-
-      for (let [key, value] of Object.entries(sortedTyped)) {
-        const bar = createBar(key, value.length)
-        chart.append(bar);
-      }
+      
+      Object.entries(types).sort((a, b) => a[1].length - b[1].length)
+        .map((item) => createBar(item[0], item[1].length))
+        .forEach(bar => chart.append(bar))
     });
 })
 
 const getAllTypes = (pokemonList) => {
   pokemonList.forEach((pokemon) => {
-    types[pokemon['Type 1']] = []
-    if (pokemon['Type 2'] !== 'None') {
-      types[pokemon['Type 2']] = []
+    if (types[pokemon['Type 1']]) {
+      types[pokemon['Type 1']].push(pokemon)
+    } else {
+      types[pokemon['Type 1']] = [pokemon]
     }
-  })
-}
 
-const countPokemonByType = (pokemonList) => {
-  pokemonList.forEach((pokemon) => {
-    types[pokemon['Type 1']].push(pokemon.Name)
     if (pokemon['Type 2'] !== 'None') {
-      types[pokemon['Type 2']].push(pokemon.Name)
+      if (types[pokemon['Type 2']]) {
+        types[pokemon['Type 2']].push(pokemon)
+      } else {
+        types[pokemon['Type 2']] = [pokemon]
+      }
     }
   })
 }
@@ -54,22 +50,4 @@ const createBar = (name, number) => {
   li.style.height = `${(number / total) * 100 * factor}px`;
 
   return li;
-}
-
-const sortObject = (types) => {
-  var sortable = [];
-  for (var type in types) {
-      sortable.push([type, types[type]]);
-  }
-
-  sortable.sort(function(a, b) {
-      return a[1].length - b[1].length;
-  });
-
-  var objSorted = {}
-  sortable.forEach(function(item){
-      objSorted[item[0]]=item[1]
-  })
-
-  return objSorted
 }
