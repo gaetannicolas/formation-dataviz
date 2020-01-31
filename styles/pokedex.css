@@ -1,0 +1,21 @@
+  
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  list-style: none;
+  width: 75%;
+}
+
+.bar {
+  flex: 1 0;
+  background-color: cadetblue;
+  margin: 0 2px;
+  min-width: 40px;
+}
