@@ -1,12 +1,36 @@
 import React, { useState } from 'react';
 import './App.css';
 import Party from './Party'
+import Detail from './Detail'
 import { median } from 'd3-array'
 
 
 const App = ({ months, allDeputes, deputesByMonths }) =>  {
+  const [detail, setDetail] = useState(null)
+
   const deputesByPartybyMonth = {}
   const partyData = {}
+  const data = {}
+  const personData = {}
+
+  allDeputes.forEach((depName) => {
+    personData[depName] = {
+      months: [],
+      semaines_presence: [],
+      commission_presences: [],
+      hemicycle_interventions: []
+    }
+
+    Object.keys(deputesByMonths).forEach((month) => {
+      const filteredDep = deputesByMonths[month].filter((depData) => depData.nom  === depName)
+      personData[filteredDep[0].nom].months.push(month)
+      personData[filteredDep[0].nom].semaines_presence.push(filteredDep[0].semaines_presence)
+      personData[filteredDep[0].nom].commission_presences.push(filteredDep[0].commission_presences)
+      personData[filteredDep[0].nom].hemicycle_interventions.push(filteredDep[0].hemicycle_interventions)
+      
+    })
+  })
+
   Object.keys(deputesByMonths).forEach((month) => {
     deputesByPartybyMonth[month] = {}
     const groupeSet = new Set
@@ -30,10 +54,6 @@ const App = ({ months, allDeputes, deputesByMonths }) =>  {
       deputesByPartybyMonth[month][dep.groupe].hemicycle_interventions.push(dep.hemicycle_interventions)
     })
   })
-  console.log(partyData)
-
-  const data = {}
-  console.log(deputesByPartybyMonth)
 
   Object.entries(deputesByPartybyMonth).forEach(([month, value]) => {
     Object.entries(value).forEach(([groupe, groupeValue]) => {
@@ -62,7 +82,15 @@ const App = ({ months, allDeputes, deputesByMonths }) =>  {
 
   return (
     <div className="App">
-      <Party deputesByParty={data} partiesData={partyData} />
+      {!detail && <Party deputesByParty={data} partiesData={partyData} />}
+      {detail && <Detail data={personData[detail]} name={detail} setDetail={setDetail} />}
+      <div>
+      {
+        allDeputes.map((dep) => (
+          <button onClick={() => setDetail(dep)}>{dep}</button>
+        ))
+      }
+      </div>
     </div>
   );
 }

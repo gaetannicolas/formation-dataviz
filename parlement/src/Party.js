@@ -35,9 +35,6 @@ const Party = ({ deputesByParty, partiesData }) => {
     })
   });
 
-  console.log(Object.values(partiesData).map((part) => part.length))
-  console.log(Object.keys(partiesData))
-
   const doughnutDatasets = {
     datasets: [{
       data: Object.values(partiesData).map((party) => party.length),
