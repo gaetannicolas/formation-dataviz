@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/gaetannicolas/formation-dataviz/issues"
   },
-  "homepage": "https://github.com/gaetannicolas/formation-dataviz#readme"
+  "homepage": "https://github.com/gaetannicolas/formation-dataviz#readme",
+  "devDependencies": {
+    "esm": "^3.2.25"
+  },
+  "dependencies": {
+    "csv-parser": "^2.3.2"
+  }
 }
