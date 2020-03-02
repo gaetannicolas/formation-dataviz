@@ -1,10 +1,10 @@
 import React from 'react'
-import { Line } from 'react-chartjs-2'
+import { Line, Doughnut } from 'react-chartjs-2'
 import randomColor from 'randomcolor'
 import { median } from 'd3-array'
 import GroupExplanation from "./GroupExplanation";
 
-const Party = ({ deputesByParty }) => {
+const Party = ({ deputesByParty, partiesData }) => {
 
   const datasetsSemainesPresences = Object.entries(deputesByParty).map(([name, value]) => {
     return ({
@@ -35,6 +35,17 @@ const Party = ({ deputesByParty }) => {
     })
   });
 
+  console.log(Object.values(partiesData).map((part) => part.length))
+  console.log(Object.keys(partiesData))
+
+  const doughnutDatasets = {
+    datasets: [{
+      data: Object.values(partiesData).map((party) => party.length),
+      backgroundColor: Object.values(partiesData).map((party) => randomColor()),
+    }],
+    labels: Object.keys(partiesData)
+  }
+
   return (
     <div>
       <h1>Semaines Présences</h1>
@@ -61,6 +72,9 @@ const Party = ({ deputesByParty }) => {
       />
       <div>
         <GroupExplanation />
+        <Doughnut
+          data={doughnutDatasets}
+        />
       </div>
     </div>
   )

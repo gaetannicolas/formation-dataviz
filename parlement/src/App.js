@@ -6,13 +6,14 @@ import { median } from 'd3-array'
 
 const App = ({ months, allDeputes, deputesByMonths }) =>  {
   const deputesByPartybyMonth = {}
-
+  const partyData = {}
   Object.keys(deputesByMonths).forEach((month) => {
     deputesByPartybyMonth[month] = {}
     const groupeSet = new Set
 
     deputesByMonths[month].map((dep) => {
       groupeSet.add(dep.groupe)
+      partyData[dep.groupe] = []
       deputesByPartybyMonth[month] = {}
     })
     groupeSet.forEach((groupe) => {
@@ -23,14 +24,15 @@ const App = ({ months, allDeputes, deputesByMonths }) =>  {
       }
     })
     deputesByMonths[month].map((dep) => {
+      partyData[dep.groupe].push(dep)
       deputesByPartybyMonth[month][dep.groupe].semaines_presence.push(dep.semaines_presence)
       deputesByPartybyMonth[month][dep.groupe].commission_presences.push(dep.commission_presences)
       deputesByPartybyMonth[month][dep.groupe].hemicycle_interventions.push(dep.hemicycle_interventions)
     })
   })
+  console.log(partyData)
 
   const data = {}
-  const partyData = {}
   console.log(deputesByPartybyMonth)
 
   Object.entries(deputesByPartybyMonth).forEach(([month, value]) => {
@@ -41,7 +43,6 @@ const App = ({ months, allDeputes, deputesByMonths }) =>  {
         commission_presences: [],
         hemicycle_interventions: []
       }
-      partyData[groupe] = []
     })
   })
 
@@ -61,7 +62,7 @@ const App = ({ months, allDeputes, deputesByMonths }) =>  {
 
   return (
     <div className="App">
-      <Party deputesByParty={data} />
+      <Party deputesByParty={data} partiesData={partyData} />
     </div>
   );
 }
